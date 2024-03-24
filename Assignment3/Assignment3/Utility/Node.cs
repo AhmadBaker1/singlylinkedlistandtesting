@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assignment3.Utility
 {
+    [Serializable]
     public class Node<T>
     {
         public T Data { get; set; }

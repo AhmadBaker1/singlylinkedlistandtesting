@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace Assignment3.Utility
 {
+    [Serializable]
+    [DataContract]
+    [KnownType(typeof(SLL<User>))]
     public class SLL<T> : ILinkedListADT<T>
     {
         private Node<T> head;
@@ -237,18 +241,31 @@ namespace Assignment3.Utility
             return array;
         }
 
-        public void Join(SLL<T> otherList)
+        public ILinkedListADT<T> Join(ILinkedListADT<T> otherList)
         {
+            // Create a new linked list to store the joined list
+            SLL<T> joinedList = new SLL<T>();
+
+            // Add elements from the current list
             Node<T> current = head;
-            while (current.Next != null)
+            while (current != null)
             {
+                joinedList.Append(current.Data);
                 current = current.Next;
             }
-            current.Next = otherList.head;
-            size += otherList.size;
+
+            // Add elements from the other list
+            current = ((SLL<T>)otherList).head;
+            while (current != null)
+            {
+                joinedList.Append(current.Data);
+                current = current.Next;
+            }
+
+            return joinedList;
         }
 
-        public Tuple<SLL<T>, SLL<T>> DivideAtIndex(int index)
+        public DividedLists<T> DivideAtIndex(int index)
         {
             if (index < 0 || index >= size)
             {
@@ -274,7 +291,26 @@ namespace Assignment3.Utility
                 count++;
             }
 
-            return Tuple.Create(firstPart, secondPart);
+            return new DividedLists<T>(firstPart, secondPart);
+        }
+        public T GetValue(int index)
+        {
+            if (index < 0 || index >= size)
+            {
+                throw new IndexOutOfRangeException("Index out of range");
+            }
+
+            Node<T> current = head;
+            for (int i = 0; i < index; i++)
+            {
+                current = current.Next;
+            }
+            return current.Data;
+        }
+
+        public int Count()
+        {
+            return size;
         }
 
     }

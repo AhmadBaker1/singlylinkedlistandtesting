@@ -1,11 +1,7 @@
-﻿using Assignment3.Utility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using System.Runtime.Serialization;
 
-namespace Assignment3
+namespace Assignment3.Utility
 {
     public interface ILinkedListADT<T>
     {
@@ -24,8 +20,25 @@ namespace Assignment3
         void Reverse();
         void Sort();
         T[] ToArray();
-        void Join(SLL<T> otherList);
-        Tuple<SLL<T>, SLL<T>> DivideAtIndex(int index);
+        // Redesigned Join method to accept any implementation of ILinkedListADT
+        ILinkedListADT<T> Join(ILinkedListADT<T> otherList);
+        // Redesigned Divide method to return a custom class/struct
+        DividedLists<T> DivideAtIndex(int index);
+        int Count();
+        T GetValue(int index);
+
     }
 
+    // Custom class/struct to encapsulate two lists returned by DivideAtIndex method
+    public class DividedLists<T>
+    {
+        public ILinkedListADT<T> FirstPart { get; set; }
+        public ILinkedListADT<T> SecondPart { get; set; }
+
+        public DividedLists(ILinkedListADT<T> firstPart, ILinkedListADT<T> secondPart)
+        {
+            FirstPart = firstPart;
+            SecondPart = secondPart;
+        }
+    }
 }
